@@ -4,11 +4,11 @@ import view
 urlpatterns = {
     '/': view.index_view,
     '/about/': view.about_view,
-    '/contacts/': view.contact_view,
+    '/contact/': view.contact_view,
 }
 
 
-def secret_controller(request, environ):
+def secret_controller(request):
     request['secret_key'] = 'My_secret_key'
 
 

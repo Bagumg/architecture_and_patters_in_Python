@@ -60,8 +60,10 @@ class MainApp:
             request['data'] = data
             request['request_params'] = request_params
             for controller in self.front_controllers:
-                controller(request, environ)
+                controller(request)
+            print(request)
             code, text = view(request)
+            print(text)
             start_response(code, [('Content-Type', 'text/html')])
             return [text.encode('utf-8')]
         else:

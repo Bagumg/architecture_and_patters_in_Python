@@ -2,26 +2,14 @@ from core.render import render
 
 
 def index_view(request):
+    print('Это request из view ', request)
     secret = request.get('secret_key', None)
-    ip = request.get('ip', None)
-    env = request.get('env', None)
-    return '200 OK', render(
-        'index.html',
-        env=env,
-        request=request,
-        secret=secret,
-        ip=ip
-    )
+    return '200 OK', render('index.html', secret=secret)
 
 
 def about_view(request):
     secret = request.get('secret_key', None)
-    ip = request.get('ip', None)
-    return '200 OK', render(
-        'about.html',
-        request=[request['secret_key'], request['ip']],
-        secret=secret,
-        ip=ip)
+    return '200 OK', render('about.html', secret=secret)
 
 
 def contact_view(request):
