@@ -1,29 +1,27 @@
-from core.core import MainApp
+from core.core import MockApplication, MainApp
+from core.logs.logging import Logger, debug
+from core.render import render
+from models import TeachingSite
 import view
 
+site = TeachingSite()
+logger = Logger('main')
+
 urlpatterns = {
-    '/': view.index_view,
-    '/about/': view.about_view,
-    '/contact/': view.contact_view,
+    '/': view.main_view,
+    '/create-course/': view.create_course,
+    '/create-category/': view.create_category,
+    '/copy-course/': view.copy_course,
+    '/category-list/': view.category_list
 }
 
 
 def secret_controller(request):
-    request['secret_key'] = 'My_secret_key'
-
-
-def ip_controller(request, environ):
-    request['ip'] = environ['HTTP_X_REAL_IP']
-
-
-def environ_controller(request, environ):
-    request['env'] = environ
+    request['secret'] = 'secret'
 
 
 front_controllers = [
-    secret_controller,
-    # ip_controller,
-    # environ_controller,
+    secret_controller
 ]
 
 app = MainApp(urlpatterns, front_controllers)

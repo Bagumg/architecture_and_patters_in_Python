@@ -1,29 +1,66 @@
+from core.logs.logging import debug
 from core.render import render
+from main import site, logger
+
+@debug
+def main_view(request):
+    logger.log('Курсы:')
+    return '200 OK', render('course_list.html', objects_list=site.courses)
 
 
-def index_view(request):
-    print('Это request из view ', request)
-    secret = request.get('secret_key', None)
-    return '200 OK', render('index.html', object_list={'secret': secret, 'request': request})
-
-
-def about_view(request):
-    secret = request.get('secret_key', None)
-    return '200 OK', render('about.html', secret=secret)
-
-
-def contact_view(request):
-    # print(request)
+@debug
+def create_course(request):
     if request['method'] == 'POST':
         data = request['data']
-        title = data['title']
-        text = data['text']
-        email = data['email']
-
-        with open('data_log.txt', 'w', encoding='utf-8') as log_file:
-            log_file.write(f'Получено сообщение от {email}, тема сообщения {title} текст сообщения {text}')
-
-        print(f'Получено сообщение от {email}, тема сообщения {title} текст сообщения {text}')
-        return '200 OK', render('success.html', object_list={'request': request})
+        name = data['name']
+        category_id = data.get('category_id')
+        category = None
+        if category_id:
+            category = site.find_category_by_id(int(category_id))
+            course = site.create_course('record', name, category)
+            site.courses.append(course)
+        return '200 OK', render('create_course.html')
     else:
-        return '200 OK', render('contact.html')
+        categories = site.categories
+        return '200 OK', render('create_course.html', categories=categories)
+
+
+@debug
+def create_category(request):
+    if request['method'] == 'POST':
+        data = request['data']
+        name = data['name']
+        category_id = data.get('category_id')
+
+        category = None
+        if category_id:
+            category = site.find_category_by_id(int(category_id))
+
+        new_category = site.create_category(name, category)
+        site.categories.append(new_category)
+        return '200 OK', render('create_category.html')
+    else:
+        categories = site.categories
+        return '200 OK', render('create_category.html', categories=categories)
+
+
+# @app.add_route('/copy-course/')
+@debug
+def copy_course(request):
+    request_params = request['request_params']
+    name = request_params['name']
+    old_course = site.get_course(name)
+    if old_course:
+        new_name = f'copy_{name}'
+        new_course = old_course.clone()
+        new_course.name = new_name
+        site.courses.append(new_course)
+
+    return '200 OK', render('course_list.html', objects_list=site.courses)
+
+
+# @app.add_route('/category-list/')
+@debug
+def category_list(request):
+    logger.log('Категории')
+    return '200 OK', render('category_list.html', objects_list=site.categories)

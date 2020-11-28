@@ -1,15 +1,17 @@
 class MainApp:
 
+    def add_route(self, url):
+        def inner(view):
+            self.urlpatterns[url] = view
+
+        return inner
+
     def parse_get_data(self, data):
-        # print(data)
         result = dict()
         if data:
             params = data.split('&')
-            # print(params)
             for item in params:
                 k, v = item.split('=')
-                # print(k)
-                # print(v)
                 result[k] = v
         return result
 
@@ -42,7 +44,6 @@ class MainApp:
         :param start_response: функция для отправки кода ответа и заголовков, нужна для передачи заголовков ответа
         :return: код ответа и заголовки(start_response), тело ответа return в виде списка из набора байт
         """
-        # print(environ['HTTP_X_REAL_IP'])
         path = environ['PATH_INFO']
         if not path.endswith('/'):
             path = f'{path}/'
@@ -61,11 +62,31 @@ class MainApp:
             request['request_params'] = request_params
             for controller in self.front_controllers:
                 controller(request)
-            # print(request)
             code, text = view(request)
-            # print(text)
             start_response(code, [('Content-Type', 'text/html')])
             return [text.encode('utf-8')]
         else:
             start_response('404 NOT FOUND', [('Content-Type', 'text/html')])
             return [b'Page Not Found']
+
+
+class DebugApplication(MainApp):
+
+    def __init__(self, urlpatterns, front_controllers):
+        self.application = MainApp(urlpatterns, front_controllers)
+        super().__init__(urlpatterns, front_controllers)
+
+    def __call__(self, env, start_response):
+        print('DEBUG MODE')
+        return self.application(env, start_response)
+
+
+class MockApplication(MainApp):
+
+    def __init__(self, urlpatterns, front_controllers):
+        self.application = MainApp(urlpatterns, front_controllers)
+        super().__init__(urlpatterns, front_controllers)
+
+    def __call__(self, env, start_response):
+        start_response('200 OK', [('Content-Type', 'text/html')])
+        return [b'Hello from Mock']
