@@ -1,11 +1,8 @@
-from core.core import MockApplication, MainApp
-from core.logs.logging import Logger, debug
-from core.render import render
+from core.core import MainApp
+from core.logs.logging import Logger
 from models import TeachingSite
 import view
 
-site = TeachingSite()
-logger = Logger('main')
 
 urlpatterns = {
     '/': view.main_view,
@@ -17,7 +14,7 @@ urlpatterns = {
 
 
 def secret_controller(request):
-    request['secret'] = 'secret'
+    request['secret'] = 'my_secret_key'
 
 
 front_controllers = [

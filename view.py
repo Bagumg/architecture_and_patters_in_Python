@@ -1,6 +1,10 @@
-from core.logs.logging import debug
+from core.logs.logging import debug, Logger
 from core.render import render
-from main import site, logger
+from models import TeachingSite
+
+site = TeachingSite()
+logger = Logger('main')
+
 
 @debug
 def main_view(request):
