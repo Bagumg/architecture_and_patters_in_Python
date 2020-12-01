@@ -7,9 +7,12 @@ import view
 urlpatterns = {
     '/': view.main_view,
     '/create-course/': view.create_course,
-    '/create-category/': view.create_category,
+    '/create-category/': view.CategoryCreateView,
     '/copy-course/': view.copy_course,
-    '/category-list/': view.category_list
+    '/category-list/': view.CategoryListView,
+    '/student-list/': view.StudentListView(),
+    '/create-student/': view.StudentCreateView(),
+    '/add-student/': view.AddStudentByCourseCreateView(),
 }
 
 
