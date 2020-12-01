@@ -2,7 +2,7 @@ from core.cbv_view import CreateView, ListView
 from core.logs.logging import debug, Logger
 from core.render import render
 from core.utils.serializers import BaseSerializer
-from main import app
+# from main import app
 from models import TeachingSite, EmailNotifier, SmsNotifier
 
 site = TeachingSite()
@@ -130,6 +130,6 @@ class AddStudentByCourseCreateView(CreateView):
         course.add_student(student)
 
 
-@app.add_route('/api/courses')
+# @app.add_route('/api/courses')
 def api_courses(request):
-    return '200 OK', BaseSerializer(site.courses).save()
+    return '200 OK', BaseSerializer.answer(request)
