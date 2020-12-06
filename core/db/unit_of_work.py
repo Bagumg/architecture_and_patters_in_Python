@@ -4,10 +4,7 @@ from core.db.data_mapper import MapperRegistry
 
 
 class UnitOfWork:
-    """
-    Паттерн UNIT OF WORK
-    """
-    # Работает с конкретным потоком
+
     current = threading.local()
 
     def __init__(self):

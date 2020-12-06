@@ -42,7 +42,6 @@ class StudentMapper:
 
     def update(self, obj):
         statement = f"UPDATE {self.tablename} SET name=? WHERE id=?"
-        # Где взять obj.id? Добавить в DomainModel? Или добавить когда берем объект из базы
         self.cursor.execute(statement, (obj.name, obj.id))
         try:
             self.connection.commit()
